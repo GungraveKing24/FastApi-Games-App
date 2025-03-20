@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameCenter - Dashboard de Juegos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            border: "hsl(var(--border))",
+            input: "hsl(var(--input))",
+            ring: "hsl(var(--ring))",
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            primary: {
+              DEFAULT: "hsl(var(--primary))",
+              foreground: "hsl(var(--primary-foreground))",
+            },
+            secondary: {
+              DEFAULT: "hsl(var(--secondary))",
+              foreground: "hsl(var(--secondary-foreground))",
+            },
+            destructive: {
+              DEFAULT: "hsl(var(--destructive))",
+              foreground: "hsl(var(--destructive-foreground))",
+            },
+            muted: {
+              DEFAULT: "hsl(var(--muted))",
+              foreground: "hsl(var(--muted-foreground))",
+            },
+            accent: {
+              DEFAULT: "hsl(var(--accent))",
+              foreground: "hsl(var(--accent-foreground))",
+            },
+            card: {
+              DEFAULT: "hsl(var(--card))",
+              foreground: "hsl(var(--card-foreground))",
+            },
+          },
+        }
+      }
+    }
+  </script>
+  <style type="text/css">
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+      --primary: 221.2 83.2% 53.3%;
+      --primary-foreground: 210 40% 98%;
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 221.2 83.2% 53.3%;
+      --radius: 0.5rem;
+    }
+
+    .dark {
+      --background: 222.2 84% 4.9%;
+      --foreground: 210 40% 98%;
+      --card: 222.2 84% 4.9%;
+      --card-foreground: 210 40% 98%;
+      --popover: 222.2 84% 4.9%;
+      --popover-foreground: 210 40% 98%;
+      --primary: 217.2 91.2% 59.8%;
+      --primary-foreground: 222.2 47.4% 11.2%;
+      --secondary: 217.2 32.6% 17.5%;
+      --secondary-foreground: 210 40% 98%;
+      --muted: 217.2 32.6% 17.5%;
+      --muted-foreground: 215 20.2% 65.1%;
+      --accent: 217.2 32.6% 17.5%;
+      --accent-foreground: 210 40% 98%;
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 217.2 32.6% 17.5%;
+      --input: 217.2 32.6% 17.5%;
+      --ring: 224.3 76.5% 48%;
+    }
+  </style>
+</head>
+<body class="bg-background text-foreground">
+  <div class="flex h-screen">
+    <!-- Mobile Menu Button -->
+    <button id="mobile-menu-button" class="fixed top-4 left-4 z-50 md:hidden bg-card border border-border rounded-md p-2 shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="menu-icon">
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="close-icon hidden">
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+    </button>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-card border-r border-border transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+      <div class="flex flex-col h-full p-4">
+        <div class="flex items-center justify-between mb-8 mt-2">
+          <h2 class="text-xl font-bold">GameCenter</h2>
+          <button id="theme-toggle" class="p-2 rounded-md hover:bg-accent">
+            <!-- Moon icon for light mode -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+            <!-- Sun icon for dark mode -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sun-icon hidden">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- User Profile -->
+        <div class="flex items-center space-x-3 mb-8 p-3 bg-muted/50 rounded-lg">
+          <div class="h-10 w-10 rounded-full bg-gray-300 overflow-hidden">
+            <img src="https://placehold.co/40x40" alt="Avatar" class="h-full w-full object-cover">
+          </div>
+          <div>
+            <p class="font-medium">GamerPro123</p>
+            <p class="text-xs text-muted-foreground">Nivel 42</p>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="space-y-1 flex-1">
+          <a href="index.html" class="flex items-center space-x-3 px-3 py-2 rounded-md bg-accent text-accent-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Inicio</span>
+          </a>
+          <a href="games.html" class="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="6" x2="10" y1="12" y2="12"></line>
+              <line x1="8" x2="8" y1="10" y2="14"></line>
+              <line x1="15" x2="15.01" y1="13" y2="13"></line>
+              <line x1="18" x2="18.01" y1="11" y2="11"></line>
+              <rect width="20" height="12" x="2" y="6" rx="2"></rect>
+            </svg>
+            <span>Mis Juegos</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+            </svg>
+            <span>Noticias</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+              <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+              <path d="M4 22h16"></path>
+              <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+              <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+              <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+            </svg>
+            <span>Logros</span>
+          </a>
+          <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>Configuración</span>
+          </a>
+        </nav>
+
+        <!-- Logout Button -->
+        <div class="mt-auto pt-4 border-t border-border">
+          <button class="flex items-center space-x-2 px-3 py-2 w-full rounded-md border border-border text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" x2="9" y1="12" y2="12"></line>
+            </svg>
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 md:ml-64 overflow-auto bg-background">
+      <div class="p-6">
+        <div class="mb-6">
+          <h1 class="text-3xl font-bold tracking-tight">Mi Dashboard de Juegos</h1>
+          <p class="text-muted-foreground">Bienvenido a tu centro de juegos personal</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+          <div class="border-b border-border mb-4">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium">
+              <li class="mr-2">
+                <button class="tab-button inline-block p-4 border-b-2 border-primary text-primary" data-tab="library">Mi Biblioteca</button>
+              </li>
+              <li class="mr-2">
+                <button class="tab-button inline-block p-4 border-b-2 border-transparent hover:text-primary hover:border-primary" data-tab="news">Noticias</button>
+              </li>
+              <li class="mr-2">
+                <button class="tab-button inline-block p-4 border-b-2 border-transparent hover:text-primary hover:border-primary" data-tab="recommendations">Recomendaciones</button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Library Tab Content -->
+          <div id="library" class="tab-content">
+            <div class="flex justify-between items-center mb-4">
+              <h2 class="text-2xl font-bold">Juegos Recientes</h2>
+              <a href="games.html" class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md border border-border bg-card hover:bg-accent transition-colors">
+                Ver Todos
+              </a>
+            </div>
+            
+            <!-- Recent Games Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <!-- Game Card 1 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="The Legend of Zelda: Breath of the Wild" class="w-full h-full object-cover">
+                    <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Completado</span>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">The Legend of Zelda: Breath of the Wild</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>120 horas</span>
+                    </div>
+                    <div class="mt-2">
+                      <div class="flex justify-between text-xs mb-1">
+                        <span>Progreso</span>
+                        <span>85%</span>
+                      </div>
+                      <div class="w-full bg-muted rounded-full h-1.5">
+                        <div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4 text-xs text-muted-foreground">
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                      </svg>
+                      <span>15/20 logros</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Game Card 2 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="Elden Ring" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">Elden Ring</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>87 horas</span>
+                    </div>
+                    <div class="mt-2">
+                      <div class="flex justify-between text-xs mb-1">
+                        <span>Progreso</span>
+                        <span>65%</span>
+                      </div>
+                      <div class="w-full bg-muted rounded-full h-1.5">
+                        <div class="bg-primary h-1.5 rounded-full" style="width: 65%"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4 text-xs text-muted-foreground">
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                      </svg>
+                      <span>22/42 logros</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Game Card 3 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="God of War Ragnarök" class="w-full h-full object-cover">
+                    <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Completado</span>
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">God of War Ragnarök</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>45 horas</span>
+                    </div>
+                    <div class="mt-2">
+                      <div class="flex justify-between text-xs mb-1">
+                        <span>Progreso</span>
+                        <span>100%</span>
+                      </div>
+                      <div class="w-full bg-muted rounded-full h-1.5">
+                        <div class="bg-primary h-1.5 rounded-full" style="width: 100%"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4 text-xs text-muted-foreground">
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                      </svg>
+                      <span>38/38 logros</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Game Card 4 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="Cyberpunk 2077" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">Cyberpunk 2077</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <span>63 horas</span>
+                    </div>
+                    <div class="mt-2">
+                      <div class="flex justify-between text-xs mb-1">
+                        <span>Progreso</span>
+                        <span>78%</span>
+                      </div>
+                      <div class="w-full bg-muted rounded-full h-1.5">
+                        <div class="bg-primary h-1.5 rounded-full" style="width: 78%"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="px-4 pb-4 text-xs text-muted-foreground">
+                    <div class="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                        <path d="M4 22h16"></path>
+                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                      </svg>
+                      <span>25/45 logros</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- Continue Playing Section -->
+            <div class="mt-8">
+              <h2 class="text-2xl font-bold mb-4">Continuar Jugando</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <!-- Game Card 5 -->
+                <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                  <a href="game-details.html">
+                    <div class="relative aspect-video">
+                      <img src="https://placehold.co/400x225" alt="Red Dead Redemption 2" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                      <h3 class="font-bold truncate">Red Dead Redemption 2</h3>
+                      <div class="flex items-center text-sm text-muted-foreground mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>110 horas</span>
+                      </div>
+                      <div class="mt-2">
+                        <div class="flex justify-between text-xs mb-1">
+                          <span>Progreso</span>
+                          <span>92%</span>
+                        </div>
+                        <div class="w-full bg-muted rounded-full h-1.5">
+                          <div class="bg-primary h-1.5 rounded-full" style="width: 92%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="px-4 pb-4 text-xs text-muted-foreground">
+                      <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                          <path d="M4 22h16"></path>
+                          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                        <span>42/51 logros</span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- Game Card 6 -->
+                <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                  <a href="game-details.html">
+                    <div class="relative aspect-video">
+                      <img src="https://placehold.co/400x225" alt="Horizon Forbidden West" class="w-full h-full object-cover">
+                      <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Completado</span>
+                    </div>
+                    <div class="p-4">
+                      <h3 class="font-bold truncate">Horizon Forbidden West</h3>
+                      <div class="flex items-center text-sm text-muted-foreground mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>52 horas</span>
+                      </div>
+                      <div class="mt-2">
+                        <div class="flex justify-between text-xs mb-1">
+                          <span>Progreso</span>
+                          <span>100%</span>
+                        </div>
+                        <div class="w-full bg-muted rounded-full h-1.5">
+                          <div class="bg-primary h-1.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="px-4 pb-4 text-xs text-muted-foreground">
+                      <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                          <path d="M4 22h16"></path>
+                          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                        <span>35/35 logros</span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- Game Card 7 -->
+                <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                  <a href="game-details.html">
+                    <div class="relative aspect-video">
+                      <img src="https://placehold.co/400x225" alt="Hades" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-4">
+                      <h3 class="font-bold truncate">Hades</h3>
+                      <div class="flex items-center text-sm text-muted-foreground mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>38 horas</span>
+                      </div>
+                      <div class="mt-2">
+                        <div class="flex justify-between text-xs mb-1">
+                          <span>Progreso</span>
+                          <span>75%</span>
+                        </div>
+                        <div class="w-full bg-muted rounded-full h-1.5">
+                          <div class="bg-primary h-1.5 rounded-full" style="width: 75%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="px-4 pb-4 text-xs text-muted-foreground">
+                      <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                          <path d="M4 22h16"></path>
+                          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                        <span>28/49 logros</span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+
+                <!-- Game Card 8 -->
+                <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                  <a href="game-details.html">
+                    <div class="relative aspect-video">
+                      <img src="https://placehold.co/400x225" alt="Final Fantasy VII Remake" class="w-full h-full object-cover">
+                      <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Completado</span>
+                    </div>
+                    <div class="p-4">
+                      <h3 class="font-bold truncate">Final Fantasy VII Remake</h3>
+                      <div class="flex items-center text-sm text-muted-foreground mt-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>42 horas</span>
+                      </div>
+                      <div class="mt-2">
+                        <div class="flex justify-between text-xs mb-1">
+                          <span>Progreso</span>
+                          <span>100%</span>
+                        </div>
+                        <div class="w-full bg-muted rounded-full h-1.5">
+                          <div class="bg-primary h-1.5 rounded-full" style="width: 100%"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="px-4 pb-4 text-xs text-muted-foreground">
+                      <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                          <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                          <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                          <path d="M4 22h16"></path>
+                          <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                          <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                          <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                        </svg>
+                        <span>40/40 logros</span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- News Tab Content -->
+          <div id="news" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-6">Últimas Noticias</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- News Card 1 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden">
+                <div class="relative h-48 w-full">
+                  <img src="https://placehold.co/600x300" alt="Elden Ring DLC" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-bold">El nuevo DLC de Elden Ring se lanzará el próximo mes</h3>
+                  <div class="flex items-center justify-between text-sm text-muted-foreground mt-1 mb-2">
+                    <span>GameNews</span>
+                    <span>Hace 2 días</span>
+                  </div>
+                  <p class="text-sm text-muted-foreground">FromSoftware ha anunciado que Shadow of the Erdtree, la esperada expansión de Elden Ring, llegará a todas las plataformas el próximo mes.</p>
+                  <a href="#" class="text-sm font-medium text-primary hover:underline mt-2 inline-block">Leer más</a>
+                </div>
+              </div>
+
+              <!-- News Card 2 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden">
+                <div class="relative h-48 w-full">
+                  <img src="https://placehold.co/600x300" alt="Breath of the Wild Sequel" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-bold">Nintendo anuncia la secuela de Breath of the Wild</h3>
+                  <div class="flex items-center justify-between text-sm text-muted-foreground mt-1 mb-2">
+                    <span>NintendoLife</span>
+                    <span>Hace 5 días</span>
+                  </div>
+                  <p class="text-sm text-muted-foreground">Durante el último Nintendo Direct, la compañía japonesa reveló nuevos detalles sobre la secuela de The Legend of Zelda: Breath of the Wild.</p>
+                  <a href="#" class="text-sm font-medium text-primary hover:underline mt-2 inline-block">Leer más</a>
+                </div>
+              </div>
+
+              <!-- News Card 3 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden">
+                <div class="relative h-48 w-full">
+                  <img src="https://placehold.co/600x300" alt="God of War PC" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-bold">God of War llegará a PC a principios del próximo año</h3>
+                  <div class="flex items-center justify-between text-sm text-muted-foreground mt-1 mb-2">
+                    <span>PCGamer</span>
+                    <span>Hace 1 semana</span>
+                  </div>
+                  <p class="text-sm text-muted-foreground">Sony ha confirmado que God of War Ragnarök estará disponible en PC a principios del próximo año, siguiendo la estrategia de llevar sus exclusivas a esta plataforma.</p>
+                  <a href="#" class="text-sm font-medium text-primary hover:underline mt-2 inline-block">Leer más</a>
+                </div>
+              </div>
+
+              <!-- News Card 4 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden">
+                <div class="relative h-48 w-full">
+                  <img src="https://placehold.co/600x300" alt="Cyberpunk 2077 Update" class="w-full h-full object-cover">
+                </div>
+                <div class="p-4">
+                  <h3 class="text-lg font-bold">Cyberpunk 2077 recibe su última gran actualización</h3>
+                  <div class="flex items-center justify-between text-sm text-muted-foreground mt-1 mb-2">
+                    <span>Eurogamer</span>
+                    <span>Hace 2 semanas</span>
+                  </div>
+                  <p class="text-sm text-muted-foreground">CD Projekt Red ha lanzado la última gran actualización para Cyberpunk 2077, añadiendo nuevas misiones, armas y mejoras de calidad de vida.</p>
+                  <a href="#" class="text-sm font-medium text-primary hover:underline mt-2 inline-block">Leer más</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommendations Tab Content -->
+          <div id="recommendations" class="tab-content hidden">
+            <h2 class="text-2xl font-bold mb-2">Recomendaciones Para Ti</h2>
+            <p class="text-muted-foreground mb-6">Basado en tus juegos y preferencias</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <!-- Recommended Game 1 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="Ghost of Tsushima" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">Ghost of Tsushima</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                      </svg>
+                      <span>4.8/5</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-2">Acción-Aventura</p>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Recommended Game 2 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="Baldur's Gate 3" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">Baldur's Gate 3</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                      </svg>
+                      <span>4.9/5</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-2">RPG</p>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Recommended Game 3 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="Hollow Knight" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">Hollow Knight</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                      </svg>
+                      <span>4.7/5</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-2">Metroidvania</p>
+                  </div>
+                </a>
+              </div>
+
+              <!-- Recommended Game 4 -->
+              <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                <a href="game-details.html">
+                  <div class="relative aspect-video">
+                    <img src="https://placehold.co/400x225" alt="Persona 5 Royal" class="w-full h-full object-cover">
+                  </div>
+                  <div class="p-4">
+                    <h3 class="font-bold truncate">Persona 5 Royal</h3>
+                    <div class="flex items-center text-sm text-muted-foreground mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                      </svg>
+                      <span>4.9/5</span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-2">RPG</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript for functionality -->
+  <script>
+    // Dark mode toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const moonIcon = document.querySelector('.moon-icon');
+    const sunIcon = document.querySelector('.sun-icon');
+    
+    // Check for saved theme preference or use system preference
+    const savedTheme = localStorage.getItem('theme') || 'system';
+    
+    // Apply the saved theme or system preference
+    if (savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      moonIcon.classList.add('hidden');
+      sunIcon.classList.remove('hidden');
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      
+      if (isDark) {
+        moonIcon.classList.add('hidden');
+        sunIcon.classList.remove('hidden');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        moonIcon.classList.remove('hidden');
+        sunIcon.classList.add('hidden');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const sidebar = document.getElementById('sidebar');
+    const menuIcon = document.querySelector('.menu-icon');
+    const closeIcon = document.querySelector('.close-icon');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      const isOpen = sidebar.classList.toggle('-translate-x-full');
+      
+      if (!isOpen) {
+        menuIcon.classList.add('hidden');
+        closeIcon.classList.remove('hidden');
+      } else {
+        menuIcon.classList.remove('hidden');
+        closeIcon.classList.add('hidden');
+      }
+    });
+    
+    // Tabs functionality
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const tabId = button.getAttribute('data-tab');
+        
+        // Hide all tab contents
+        tabContents.forEach(content => {
+          content.classList.add('hidden');
+        });
+        
+        // Remove active class from all tab buttons
+        tabButtons.forEach(btn => {
+          btn.classList.remove('border-primary', 'text-primary');
+          btn.classList.add('border-transparent', 'hover:text-primary', 'hover:border-primary');
+        });
+        
+        // Show the selected tab content
+        document.getElementById(tabId).classList.remove('hidden');
+        
+        // Add active class to the clicked tab button
+        button.classList.add('border-primary', 'text-primary');
+        button.classList.remove('border-transparent', 'hover:text-primary', 'hover:border-primary');
+      });
+    });
+  </script>
+</body>
+</html>
