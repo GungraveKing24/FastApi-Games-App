@@ -43,3 +43,16 @@
   --ring: 224.3 76.5% 48%;
 }
 
+/* Estilo para las tarjetas de juego con imagen vertical */
+.game-card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+}
+
+.game-card-image {
+  aspect-ratio: 2/3; /* Proporción vertical para las imágenes */
+  object-fit: cover;
+}

@@ -67,54 +67,49 @@
         </div>
 
         <!-- Games Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            <!-- Game Card 1 -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 mb-8">
             
             {% for game in games %}
-            <div class="bg-card border border-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <a href="{{ url_for('game_details', id=game.id) }}">
-                    <div class="relative aspect-video">
-                        {% if game.img %}
-                        <img src="{{ url_for('static', path='images/Caratulas/' + game.img)}}" alt="{{ game.juego }}" class="w-full h-full object-cover">
+                <!-- Game Cards -->
+                <a href="{{ url_for('game_details', id=game.id) }}" class="game-card group block rounded-lg overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-shadow">
+                    <div class="relative">
+                        <img src="{{ url_for('static', path='images/Caratulas/' + game.img) }}" alt="The Legend of Zelda: Breath of the Wild" class="game-card-image w-full">
+                        
+                        {% if game.Calificacion > 0.1 and game.Calificacion < 5 %}
+                            <div class="absolute top-2 right-2 bg-primary text-primary-foreground text-xs font-medium px-2 py-1 rounded-md">
+                                {{ game.Calificacion }}
+                            </div>
+                        {% elif game.Calificacion > 5 and game.Calificacion <= 7 %}
+                            <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-medium px-2 py-1 rounded-md">
+                                {{ game.Calificacion }}
+                            </div>
+                        {% elif game.Calificacion > 7 %}
+                            <div class="absolute top-2 right-2 bg-green-500 text-white text-xs font-medium px-2 py-1 rounded-md">
+                                {{ game.Calificacion }}
+                            </div>
                         {% else %}
-                        <img src="https://placehold.co/400x225" alt="{{ game.juego }}" class="w-full h-full object-cover">  
+                            <div class="absolute top-2 right-2 bg-gray-500 text-white text-xs font-medium px-2 py-1 rounded-md">
+                                {{ game.Calificacion }}
+                            </div>
                         {% endif %}
-                        <!-- Completado, Pendiente, Jugando, Abandonado, Nuevo -->
-                        {% if game.estado == "Completado" %}
-                            <span class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">Completado</span>
-                        {% elif game.estado == "Pendiente" %}
-                            <span class="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">Pendiente</span>
-                        {% elif game.estado == "Jugando" %} 
-                            <span class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full">Jugando</span>
-                        {% elif game.estado == "Abandonado" %}
-                            <span class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Abandonado</span>
-                        {% elif game.estado == "Nuevo" %}
-                            <span class="absolute top-2 right-2 bg-gray-500 text-white text-xs px-2 py-1 rounded-full">Nuevo</span>
-                        {% endif %}
-                    </div>
 
-                    <div class="p-4">
-                        <h3 class="font-bold truncate marquee-text">{{ game.juego }}</h3>
-                        <div class="flex items-center text-sm text-muted-foreground mt-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                            </svg>
-                            <span>{{ game.fecha_finalizado }}</span>
+                        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                            <div class="flex items-center space-x-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-yellow-400 fill-yellow-400">
+                                    <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                </svg>
+                                <span class="text-white text-xs">4.9</span>
+                            </div>
                         </div>
-
-                        <div class="mt-2">
-                            <div class="flex justify-between text-xs mb-1">
-                                <span>Progreso</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="w-full bg-muted rounded-full h-1.5">
-                                <div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-medium text-sm line-clamp-2">{{ game.juego }}</h3>
+                        <div class="flex justify-between items-center mt-2">
+                            <span class="text-xs text-muted-foreground">{{ game.estado }}</span>
+                            <span class="text-xs bg-secondary text-secondary-foreground px-1.5 py-0.5 rounded">120h</span>
+                        </div>
                     </div>
                 </a>
-            </div>
             {% endfor %}
             <!-- Game Card 1 end -->
         </div>
