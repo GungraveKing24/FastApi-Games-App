@@ -11,6 +11,7 @@ DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 
 #Optener API KEYS
 API_KEY_RAWG = os.environ.get('API_KEY_RAWG', None)
+API_KEY_STEAMGRIDDB = os.environ.get('API_KEY_STEAMGRIDDB', None)
 
 # Configuración de SQLAlchemy
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})

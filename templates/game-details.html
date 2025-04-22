@@ -7,7 +7,7 @@
 <main class="flex-1 md:ml-64 overflow-auto bg-background">
   <!-- Game Banner -->
   <div class="relative h-[300px] w-full">
-    <img src="{{ url_for('static', path='images/Caratulas/' + game.img)}}" alt="{{ game.juego }}" class="w-full h-full object-cover">
+    <img src="{{ url_for('static', path='images/Heroes/' + game.img_heroe)}}" alt="{{ game.juego }}" class="w-full h-full object-cover">
     <div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
     <div class="absolute bottom-0 left-0 p-6">
       <a href="games.html" class="inline-flex items-center px-3 py-2 mb-4 text-sm font-medium rounded-md bg-background/80 backdrop-blur-sm hover:bg-background/90 transition-colors">
@@ -40,7 +40,7 @@
           </svg>
           <h3 class="font-medium">Tiempo de juego</h3>
         </div>
-        <p class="text-2xl font-bold">120 horas</p>
+        <p class="text-2xl font-bold">{{ game.horas_jugadas }}</p>
       </div>
       
       <div class="bg-card rounded-lg p-4 border border-border">
@@ -76,18 +76,6 @@
         </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="mb-6">
-      <h3 class="font-medium mb-2">Progreso general</h3>
-      <div class="flex justify-between text-sm mb-1">
-        <span>Completado</span>
-        <span>85%</span>
-      </div>
-      <div class="w-full bg-muted rounded-full h-2">
-        <div class="bg-primary h-2 rounded-full" style="width: 85%"></div>
-      </div>
-    </div>
-
     <!-- Tabs -->
     <div class="tabs-container">
       <div class="border-b border-border mb-4">
@@ -106,27 +94,35 @@
 
       <!-- About Tab Content -->
       <div id="about" class="tab-content">
-        <p class="text-muted-foreground mb-6">The Legend of Zelda: Breath of the Wild es un juego de acción y aventura de 2017 desarrollado y publicado por Nintendo para las consolas Nintendo Switch y Wii U. Es la decimonovena entrega de la serie The Legend of Zelda y sigue a un amnésico Link, que despierta de un sueño de cien años para derrotar a Calamity Ganon y salvar al reino de Hyrule.</p>
+        <p class="text-muted-foreground mb-6">{{ game.Descripcion }}</p>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
             <h3 class="font-medium mb-2">Detalles</h3>
             <ul class="space-y-2 text-sm">
-              <li class="flex justify-between">
+              <!-- <li class="flex justify-between">
                 <span class="text-muted-foreground">Desarrollador</span>
                 <span>Nintendo</span>
               </li>
               <li class="flex justify-between">
                 <span class="text-muted-foreground">Editor</span>
                 <span>Nintendo</span>
-              </li>
+              </li> -->
               <li class="flex justify-between">
                 <span class="text-muted-foreground">Fecha de lanzamiento</span>
-                <span>3 Mar, 2017</span>
+                <span>{{ game.fecha_lanzamiento }}</span>
               </li>
               <li class="flex justify-between">
                 <span class="text-muted-foreground">Plataforma</span>
-                <span>Nintendo Switch</span>
+                <div class="flex flex-wrap gap-2">
+                  {% for plataforma in game.plataformas %}
+                    {% if plataforma %}
+                      <span class="px-2 bg-secondary text-secondary-foreground rounded-md text-xs">
+                        {{ plataforma }}
+                      </span>
+                      {% endif %}
+                    {% endfor %}
+                </div>
               </li>
             </ul>
           </div>
@@ -134,10 +130,13 @@
           <div>
             <h3 class="font-medium mb-2">Etiquetas</h3>
             <div class="flex flex-wrap gap-2">
-              <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs">Mundo abierto</span>
-              <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs">Aventura</span>
-              <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs">Acción</span>
-              <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs">RPG</span>
+              {% for etiqueta in game.generos %}
+                {% if etiqueta %}
+                  <span class="px-2 py-1 bg-secondary text-secondary-foreground rounded-md text-xs">
+                    {{ etiqueta }}
+                  </span>
+                {% endif %}
+              {% endfor %}
             </div>
           </div>
         </div>

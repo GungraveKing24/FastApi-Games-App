@@ -1,13 +1,14 @@
 from fastapi import FastAPI, Request, Depends
 from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from models.model import Games
 from flaskwebgui import FlaskUI
 from config import SessionLocal
-from routes.RAWG import router
-import uvicorn
+from routes import HLTB, data, crud
+import uvicorn, json
 
 app = FastAPI()
 
@@ -16,6 +17,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Cargar plantillas desde /templates/
 templates = Jinja2Templates(directory="templates")
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Dependencia para la sesión de la base de datos
 def get_db():
@@ -55,6 +65,9 @@ async def search_results_by_game(request: Request, juego: str, db: Session = Dep
 @app.get("/game_details/{id}", response_class=HTMLResponse, name="game_details")
 async def game_details(request: Request, id: int, db: Session = Depends(get_db)):
     game = db.query(Games).filter(Games.id == id).first()
+    game.generos = json.loads(game.generos)
+    game.plataformas = json.loads(game.plataformas)
+
     return templates.TemplateResponse("game-details.html", {"request": request, "game": game})
 
 @app.get("/Create", response_class=HTMLResponse)
@@ -63,8 +76,10 @@ async def create_game(request: Request, db: Session = Depends(get_db)):
 
     return templates.TemplateResponse("create.html", {"request": request, "estados": estados})
 
-app.include_router(router)
+app.include_router(data.router)
+app.include_router(crud.router)
+app.include_router(HLTB.router)
 
 if __name__ == "__main__":
-    #FlaskUI(app=app, server="fastapi").run()
+    #FlaskUI(app=app, server="fastapi", fullscreen=True).run()
     uvicorn.run(app, host="0.0.0.0", port=8000)
