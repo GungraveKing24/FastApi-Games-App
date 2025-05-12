@@ -6,14 +6,17 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from models.model import Games
 from flaskwebgui import FlaskUI
+from starlette.responses import FileResponse
 from config import SessionLocal
 from routes import HLTB, data, crud
+
 import uvicorn, json
 
 app = FastAPI()
 
 # Servir archivos estáticos desde /static/
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static/react/dist", html=True), name="react")
 
 # Cargar plantillas desde /templates/
 templates = Jinja2Templates(directory="templates")
@@ -34,6 +37,10 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@app.get("/{full_path:path}", response_class=HTMLResponse)
+async def serve_react_app():
+    return FileResponse("static/react/dist/index.html")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request, db: Session = Depends(get_db)):
@@ -69,6 +76,12 @@ async def game_details(request: Request, id: int, db: Session = Depends(get_db))
     game.plataformas = json.loads(game.plataformas)
 
     return templates.TemplateResponse("game-details.html", {"request": request, "game": game})
+
+@app.get("/game_details_json/{id}")
+async def game_details_json(id: int, db: Session = Depends(get_db)):
+    game = db.query(Games).filter(Games.id == id).first()
+
+    return game
 
 @app.get("/Create", response_class=HTMLResponse)
 async def create_game(request: Request, db: Session = Depends(get_db)):

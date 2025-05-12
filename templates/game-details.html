@@ -18,7 +18,7 @@
       </a>
       <h1 class="text-4xl font-bold text-white mb-2">{{ game.juego }}</h1>
       <div class="flex items-center space-x-4">
-        <span class="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm">Aventura</span>
+        <span class="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm">{{ game.estado }}</span>
         <div class="flex items-center text-white">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 fill-yellow-400 text-yellow-400">
             <path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
@@ -109,10 +109,6 @@
                 <span>Nintendo</span>
               </li> -->
               <li class="flex justify-between">
-                <span class="text-muted-foreground">Fecha de lanzamiento</span>
-                <span>{{ game.fecha_lanzamiento }}</span>
-              </li>
-              <li class="flex justify-between">
                 <span class="text-muted-foreground">Plataforma</span>
                 <div class="flex flex-wrap gap-2">
                   {% for plataforma in game.plataformas %}
@@ -123,6 +119,10 @@
                       {% endif %}
                     {% endfor %}
                 </div>
+              </li>
+              <li class="flex justify-between">
+                <span class="text-muted-foreground">Fecha de lanzamiento</span>
+                <span>{{ game.fecha_lanzamiento }}</span>
               </li>
             </ul>
           </div>

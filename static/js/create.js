@@ -290,9 +290,9 @@ async function submitGameForm() {
     const formData = {
         title: form.querySelector('#title').value,
         status: form.querySelector('#status').value,
-        release_date: form.querySelector('#release-date').value,
-        completion_date: form.querySelector('#completion-date').value,
-        user_rating: parseFloat(form.querySelector('#user-rating').value),
+        fecha_lanzamiento: form.querySelector('#release-date').value || null,  // Nombre corregido
+        fecha_finalizado: form.querySelector('#completion-date').value || null, // Nombre corregido
+        user_rating: parseFloat(form.querySelector('#user-rating').value) || 0,
         metacritic_rating: parseFloat(form.querySelector('#metacritic-rating').value || 0),
         HLTB_MAIN: parseFloat(form.querySelector('#HLTB_MAIN').value || 0),
         HLTB_MAIN_EXTRA: parseFloat(form.querySelector('#HLTB_MAIN_EXTRA').value || 0),
@@ -303,10 +303,12 @@ async function submitGameForm() {
         times_played: parseInt(form.querySelector('#times-played').value || 1),
         hours_played: parseFloat(form.querySelector('#hours-played').value || 0),
         replaying: form.querySelector('#replaying').checked,
-        platforms: Array.from(form.querySelectorAll('input[name="platforms"]:checked')).map(el => el.value),
-        genres: Array.from(form.querySelectorAll('#genres-container input[type="checkbox"]:checked')).map(el => el.value),
+        plataformas: Array.from(form.querySelectorAll('input[name="platforms"]:checked')).map(el => el.value), // Nombre corregido
+        generos: Array.from(form.querySelectorAll('#genres-container input[type="checkbox"]:checked')).map(el => el.value), // Nombre corregido
         description: form.querySelector('#description').value
     };
+
+    console.log("Datos a enviar:", formData);
 
     try {
         // Enviar los datos al backend
