@@ -16,7 +16,6 @@ app = FastAPI()
 
 # Servir archivos estáticos desde /static/
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/static", StaticFiles(directory="static/react/dist", html=True), name="react")
 
 # Cargar plantillas desde /templates/
 templates = Jinja2Templates(directory="templates")
@@ -37,10 +36,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-@app.get("/{full_path:path}", response_class=HTMLResponse)
-async def serve_react_app():
-    return FileResponse("static/react/dist/index.html")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request, db: Session = Depends(get_db)):
@@ -94,5 +89,5 @@ app.include_router(crud.router)
 app.include_router(HLTB.router)
 
 if __name__ == "__main__":
-    #FlaskUI(app=app, server="fastapi", fullscreen=True).run()
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    FlaskUI(app=app, server="fastapi", fullscreen=True).run()
+    #uvicorn.run(app, host="0.0.0.0", port=8000)
