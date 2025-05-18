@@ -1,13 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 export default {
     content: [
-      "./templates/**/*.html", // Rutas de plantillas HTML
-      "./static/css/**/*.css", // Rutas de CSS en static/css
+        "./templates/**/*.html",
+        "./static/css/**/*.css",
     ],
-    darkMode: "class", // Configuración de modo oscuro
     theme: {
         extend: {
-            colors: {
+            colors: 
+            {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
                 ring: "hsl(var(--ring))",
@@ -40,6 +40,5 @@ export default {
             },
         }
     },
-    
     plugins: [],
 };

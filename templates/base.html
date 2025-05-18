@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="icon" href="{{ url_for('static', path='images/icon.ico') }}" type="image/x-icon">
+
+    
     <title>{% block title %}{% endblock title %}</title>
     
     <!-- Estilos -->
@@ -10,7 +14,7 @@
     <link rel="stylesheet" href="{{ url_for('static', path='css/index.css') }}">
     {% block styles %}{% endblock styles %}
 </head>
-<body class="bg-background text-foreground">
+<body class="darky bg-background text-foreground">
     <div class="flex h-screen">
         {% include 'navbar.html' %}
 

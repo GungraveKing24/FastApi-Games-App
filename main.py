@@ -89,5 +89,5 @@ app.include_router(crud.router)
 app.include_router(HLTB.router)
 
 if __name__ == "__main__":
-    FlaskUI(app=app, server="fastapi", fullscreen=True).run()
-    #uvicorn.run(app, host="0.0.0.0", port=8000)
+    #FlaskUI(app=app, server="fastapi", fullscreen=True).run()
+    uvicorn.run(app, host="0.0.0.0", port=8000)

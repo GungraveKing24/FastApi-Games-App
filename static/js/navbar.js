@@ -1,32 +1,3 @@
-// Dark mode toggle
-const themeToggle = document.getElementById('theme-toggle');
-const moonIcon = document.querySelector('.moon-icon');
-const sunIcon = document.querySelector('.sun-icon');
-
-// Check for saved theme preference or use system preference
-const savedTheme = localStorage.getItem('theme') || 'system';
-
-// Apply the saved theme or system preference
-if (savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-    moonIcon.classList.add('hidden');
-    sunIcon.classList.remove('hidden');
-}
-
-themeToggle.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    
-    if (isDark) {
-        moonIcon.classList.add('hidden');
-        sunIcon.classList.remove('hidden');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        moonIcon.classList.remove('hidden');
-        sunIcon.classList.add('hidden');
-        localStorage.setItem('theme', 'light');
-    }
-});
-
 // Mobile menu toggle
 const mobileMenuButton = document.getElementById('mobile-menu-button');
 const sidebar = document.getElementById('sidebar');
